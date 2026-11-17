@@ -1,0 +1,12 @@
+'use strict';
+const ids=[1,2,3,4,5,12,18,19,20,21,23,27];
+const shelf=ids.map(id=>products.find(p=>p.id===id)).filter(Boolean);
+const orders=[[1,2,5],[3,19,21],[4,18,27],[12,20,23],[2,19,27],[1,3,18]];
+let round=0,basket={},score=0;
+try{const saved=JSON.parse(localStorage.getItem('market-game-v1')||'null');if(saved&&Number.isInteger(saved.round)&&saved.round>=0&&Number.isInteger(saved.score)&&saved.score>=0){round=saved.round;score=saved.score}}catch(e){}
+const byId=id=>shelf.find(p=>p.id===id);
+function render(){const order=orders[round%orders.length];document.getElementById('score').textContent='⭐ '+score;document.getElementById('list').innerHTML=order.map(id=>`<span class="item ${basket[id]===1?'done':''}">${basket[id]===1?'✓':'○'} ${byId(id).name}</span>`).join('');document.getElementById('progress').textContent=order.filter(id=>basket[id]===1).length+' / '+order.length+' ürün';document.getElementById('shelf').innerHTML=shelf.map(p=>`<article class="product"><img src="assets/${p.image}" alt=""><h3>${p.name}</h3><div class="counter"><button data-id="${p.id}" data-delta="-1" aria-label="${p.name} azalt" ${!basket[p.id]?'disabled':''}>−</button><span class="count">${basket[p.id]||0}</span><button data-id="${p.id}" data-delta="1" aria-label="${p.name} ekle" ${(basket[p.id]||0)>=8?'disabled':''}>+</button></div></article>`).join('')}
+document.getElementById('shelf').addEventListener('click',e=>{const button=e.target.closest('button[data-id]');if(!button)return;const id=Number(button.dataset.id);basket[id]=Math.max(0,Math.min(8,(basket[id]||0)+Number(button.dataset.delta)));if(!basket[id])delete basket[id];document.getElementById('message').textContent='Sepetini hazırlıyorsun 🛒';render()});
+document.getElementById('clear').addEventListener('click',()=>{basket={};document.getElementById('message').textContent='Sepetin boşaltıldı.';render()});
+document.getElementById('complete').addEventListener('click',()=>{const order=orders[round%orders.length];const correct=order.every(id=>basket[id]===1)&&Object.keys(basket).length===order.length;if(!correct){document.getElementById('message').textContent='Listeyi tekrar kontrol et: Her üründen bir tane seç. 💡';return}score+=10;round++;basket={};try{localStorage.setItem('market-game-v1',JSON.stringify({round,score}))}catch(e){}render();document.getElementById('message').textContent='Harika! Sipariş tamamlandı, 10 yıldız kazandın! Yeni müşteri geldi. 🎉'});
+render();
