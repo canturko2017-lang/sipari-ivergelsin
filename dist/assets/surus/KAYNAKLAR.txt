@@ -24,3 +24,5 @@ Ev: Two-storey centre-hall colonial house, Innerscene, CC0. https://www.innersce
 Yürüyen insan: Relaxed walk - Sam, Innerscene / MakeHuman, CC0. https://www.innerscene.com/tools/library/3d-parts/relaxed-walk-sam-3d-person-animated-732f1206
 
 Çim: Leafy Grass, Poly Haven, CC0. https://polyhaven.com/a/leafy_grass
+
+SUV: Generic compact SUV, Innerscene, CC0. https://www.innerscene.com/tools/library/3d-parts/generic-compact-suv-9f157ee5
