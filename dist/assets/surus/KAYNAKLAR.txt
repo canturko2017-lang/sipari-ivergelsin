@@ -26,3 +26,5 @@ Yürüyen insan: Relaxed walk - Sam, Innerscene / MakeHuman, CC0. https://www.in
 Çim: Leafy Grass, Poly Haven, CC0. https://polyhaven.com/a/leafy_grass
 
 SUV: Generic compact SUV, Innerscene, CC0. https://www.innerscene.com/tools/library/3d-parts/generic-compact-suv-9f157ee5
+
+Palmiye: Palm, detailed, Innerscene, CC0. https://www.innerscene.com/tools/library/3d-parts/palm-detailed-a8777b8c
