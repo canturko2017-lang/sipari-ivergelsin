@@ -28,3 +28,6 @@ Yürüyen insan: Relaxed walk - Sam, Innerscene / MakeHuman, CC0. https://www.in
 SUV: Generic compact SUV, Innerscene, CC0. https://www.innerscene.com/tools/library/3d-parts/generic-compact-suv-9f157ee5
 
 Palmiye: Palm, detailed, Innerscene, CC0. https://www.innerscene.com/tools/library/3d-parts/palm-detailed-a8777b8c
+
+BMW M3 E30: Martin Trafas, CC BY 4.0. Kaynak: https://sketchfab.com/3d-models/free-bmw-m3-e30-ac3c7013434e403e8faff87948caf422 (Draco sıkıştırması kaldırıldı). Lisans: https://creativecommons.org/licenses/by/4.0/
+Audi Q7: Savelliy 07, CC BY 4.0. Kaynak: https://sketchfab.com/3d-models/1bd807b75ca744c2b639740ecd7ff6fa (Objaverse üzerinden). Lisans: https://creativecommons.org/licenses/by/4.0/
