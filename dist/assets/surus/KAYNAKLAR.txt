@@ -17,3 +17,6 @@ Güvenlik görevlisi: Drew, Innerscene / MakeHuman, CC0. https://www.innerscene.
 Apartman: Four-storey apartment block, Innerscene, CC0. https://www.innerscene.com/tools/library/3d-parts/four-storey-apartment-block-331e1924
 
 Motosiklet: Sport motorcycle (naked sport bike), Innerscene, CC0. https://www.innerscene.com/tools/library/3d-parts/sport-motorcycle-naked-sport-bike-fc4c9758
+
+Villa: Modern four-bedroom villa with pool, Innerscene, CC0. https://www.innerscene.com/tools/library/3d-parts/modern-four-bedroom-villa-with-pool-3d-model-ec51544e
+Ev: Two-storey centre-hall colonial house, Innerscene, CC0. https://www.innerscene.com/tools/library/3d-parts/two-storey-centre-hall-colonial-house-12-x-9-m-6c6874bc
