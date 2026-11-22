@@ -27,4 +27,5 @@
 
 .jump-button{position:absolute;z-index:2;top:max(200px,calc(env(safe-area-inset-top) + 200px));right:20px;min-width:100px;min-height:44px;padding:10px;border:1px solid #a3bdad77;border-radius:10px;background:#263b3cdd;color:#fff;font-weight:800;touch-action:manipulation}
 
-.gesture-hand{position:absolute;z-index:3;left:50%;bottom:24%;font-size:clamp(85px,14vw,180px);line-height:1;pointer-events:none;filter:drop-shadow(0 5px 6px #0008);transform:translate(-50%,40%) scale(.85);opacity:0;transition:transform .15s,opacity .15s}.gesture-hand.show{opacity:1;transform:translate(-50%,0) scale(1)}.gesture-hand[hidden]{display:none}.gesture-button{position:absolute;z-index:2;top:max(254px,calc(env(safe-area-inset-top) + 254px));right:20px;min-width:100px;min-height:44px;padding:10px;border:1px solid #a3bdad77;border-radius:10px;background:#263b3cdd;color:#fff;font-weight:800;touch-action:manipulation}
+
+.turbo-button{position:absolute;z-index:2;top:max(254px,calc(env(safe-area-inset-top) + 254px));right:20px;min-width:100px;min-height:44px;padding:10px;border:1px solid #ffbb6b;border-radius:10px;background:#8a3b10dd;color:#fff;font-weight:800;touch-action:none}.turbo-button.pressed{background:#f3791a}
