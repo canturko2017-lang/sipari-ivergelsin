@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#141d19">
+  <meta name="description" content="Motorla veya arabayla market teslimatı yap ya da Süper Market kasasında müşterilere hizmet et.">
+  <title>Siparişi Ver Gelsin | Oyun modları</title>
+  <link rel="stylesheet" href="oyun-modlari.css">
+  <link rel="manifest" href="manifest.webmanifest">
+  <script src="oyun-modlari.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="wordmark" href="oyun-modlari.html">Siparişi Ver Gelsin</a>
+    <a href="index.html">Market vitrini</a>
+  </header>
+  <main>
+    <section class="intro" aria-labelledby="page-title">
+      <h1 id="page-title">Bugün ne oynayalım?</h1>
+      <p id="suggestion" aria-live="polite">Sürüş veya market kasası. İstediğini seç.</p>
+      <a id="quickStart" class="quick-start" href="teslimat.html?gorev=yeni&amp;mod=kurye">Sürpriz başlat</a>
+    </section>
+    <div class="modes">
+      <section class="mode courier" aria-labelledby="courier-title">
+        <div class="mode-content">
+          <h2 id="courier-title">Kurye</h2>
+          <p>Market siparişini al, şehirden geç ve paketi elden teslim et.</p>
+          <form action="teslimat.html" method="get">
+            <input type="hidden" name="gorev" value="yeni">
+            <input type="hidden" name="mod" value="kurye">
+            <fieldset>
+              <legend>Araç seç</legend>
+              <label class="vehicle"><input type="radio" name="arac" value="motor" checked><span><strong>Motor</strong><span>H2R esintili</span></span></label>
+              <label class="vehicle"><input type="radio" name="arac" value="araba"><span><strong>Araba</strong><span>Chiron Super Sport esintili</span></span></label>
+            </fieldset>
+            <label class="challenge"><input type="checkbox" name="gorev-turu" value="akrobasi"> İsteğe bağlı zıplama görevi</label>
+            <button class="play" type="submit">Kurye olarak başla</button>
+          </form>
+        </div>
+      </section>
+      <section class="mode supermarket" aria-labelledby="market-title">
+        <div class="mode-content">
+          <h2 id="market-title">Süper Market</h2>
+          <p>Kasayı aç, gelen müşterinin ürünlerini okut. Kart veya nakitle ödemeyi tamamla.</p>
+          <a class="play" href="super-market.html">Kasayı aç</a>
+        </div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

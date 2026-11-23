@@ -29,3 +29,16 @@
 
 
 .turbo-button{position:absolute;z-index:2;top:max(254px,calc(env(safe-area-inset-top) + 254px));right:20px;min-width:100px;min-height:44px;padding:10px;border:1px solid #ffbb6b;border-radius:10px;background:#8a3b10dd;color:#fff;font-weight:800;touch-action:none}.turbo-button.pressed{background:#f3791a}
+
+.wheelie-button, .drive-audio, .delivery-action { position: absolute; z-index: 2; min-height: 44px; border: 1px solid #a3bdad77; border-radius: 10px; background: #263b3cee; color: white; padding: 8px 12px; font: 750 14px/1.1 system-ui, sans-serif; cursor: pointer; }
+.wheelie-button { top: calc(env(safe-area-inset-top) + 308px); right: 20px; min-width: 100px; touch-action: none; }
+.wheelie-button.pressed { background: #b45520; }
+.drive-audio { top: calc(env(safe-area-inset-top) + 225px); left: 20px; }
+.drive-audio[aria-pressed="false"] { color: #c7d1cd; }
+.drive-objective { position: absolute; z-index: 3; left: 50%; bottom: max(92px, calc(env(safe-area-inset-bottom) + 92px)); transform: translateX(-50%); max-width: min(430px, 90vw); background: #162221ee; color: #fff; border: 1px solid #bcdbb5; border-radius: 11px; padding: 9px 14px; text-align: center; font: 750 14px/1.35 system-ui, sans-serif; pointer-events: none; }
+.delivery-action { z-index: 5; left: 50%; top: 62%; transform: translateX(-50%); background: #ffd275; border-color: #ffd275; color: #252210; min-width: 160px; }
+.phone-market { gap: 7px; }
+@media (max-width: 480px) {
+  .drive-audio { top: calc(env(safe-area-inset-top) + 192px); left: 10px; }
+  .wheelie-button { right: 10px; }
+}
