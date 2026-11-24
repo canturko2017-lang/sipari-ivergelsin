@@ -1,11 +1,11 @@
 'use strict';
 
-const CACHE = 'tarif-market-v57';
+const CACHE = 'tarif-market-v58';
 const SHELL = [
   './', './index.html', './app.css', './app.js', './catalog.js',
   './oyun-modlari.html', './oyun-modlari.css', './oyun-modlari.js',
   './oyun.html', './oyun.css', './oyun.js',
-  './super-market.html', './super-market.css', './super-market.js',
+  './super-market.html', './super-market.css', './super-market.js', './market-peyzaj.js',
   './teslimat.html', './teslimat.css', './teslimat.js',
   './kurye-araclari.js', './yol-sahnesi.js', './three.min.js', './gltf-loader.js', './surus-textures.js',
   './assets/surus/motor-kokpit.png', './assets/surus/araba-kokpit.png',

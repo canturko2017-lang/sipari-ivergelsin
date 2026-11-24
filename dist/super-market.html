@@ -8,35 +8,46 @@
   <link rel="stylesheet" href="super-market.css">
 </head>
 <body>
-  <header class="topbar">
-    <a class="logo" href="oyun-modlari.html" aria-label="Oyun modu seçimine dön"><span class="logo-mark" aria-hidden="true">S</span><span>Süper Market</span></a>
-    <nav aria-label="Oyun modları">
-      <a href="oyun-modlari.html">Mod seç</a>
-      <a href="teslimat.html?gorev=yeni&amp;mod=kurye">Kurye modu</a>
-      <button id="sound" class="sound" type="button" aria-pressed="false">Ses kapalı</button>
-    </nav>
-  </header>
-
   <main class="game" id="market">
+    <header class="topbar">
+      <div class="market-title">
+        <a class="logo-mark" href="oyun-modlari.html" aria-label="Oyun modu seçimine dön">S</a>
+        <h1 id="market-title">Süper Market</h1>
+      </div>
+      <nav aria-label="Market ayarları">
+        <a class="mode-link" href="oyun-modlari.html">Mod seç</a>
+        <button id="sound" class="hud-button icon-control" type="button" aria-label="Market sesi" aria-pressed="false" title="Market sesi">Ses kapalı</button>
+        <button id="helper-open" class="hud-button icon-control" type="button" aria-label="Yardım" aria-haspopup="dialog" title="Yardım">Yardım</button>
+        <button id="fullscreen" class="hud-button icon-control" type="button" aria-label="Tam ekran" aria-pressed="false" title="Tam ekran">Tam ekran</button>
+      </nav>
+    </header>
+
     <section class="floor" aria-labelledby="market-title">
       <div id="scene" class="scene" aria-hidden="true"><div class="scene-fallback"><div class="fallback-window"></div><div class="fallback-shelves"></div><div class="fallback-counter"></div></div></div>
-      <div class="floor-top">
-        <div><p class="eyebrow">SİPARİŞİ VER GELSİN</p><h1 id="market-title">Süper Market</h1></div>
-        <div class="location">Kasa 01</div>
-      </div>
-      <div class="floor-bottom">
-        <dl class="shift-total">
-          <div><dt>Satış</dt><dd id="sold">0</dd></div>
-          <div><dt>Kasa toplamı</dt><dd id="revenue">₺0,00</dd></div>
-        </dl>
-        <button id="phone-open" class="phone-button" type="button" aria-haspopup="dialog">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="6" y="2" width="12" height="20" rx="2"/><path d="M10 18h4" stroke-linecap="round"/></svg> Telefon
-        </button>
-      </div>
     </section>
 
-    <section class="register" aria-labelledby="register-title">
-      <div class="register-heading"><p class="eyebrow">KASA EKRANI</p><h2 id="register-title">Müşteri siparişi</h2></div>
+    <div class="hud-bottom">
+      <div class="walk-controls" id="walk-controls" role="group" aria-label="Yürüme kontrolleri">
+        <button class="hud-button" type="button" data-walk="forward" aria-label="İleri yürü">↑</button>
+        <button class="hud-button" type="button" data-walk="left" aria-label="Sola yürü">←</button>
+        <button class="hud-button" type="button" data-walk="back" aria-label="Geri yürü">↓</button>
+        <button class="hud-button" type="button" data-walk="right" aria-label="Sağa yürü">→</button>
+      </div>
+      <div class="hud-actions">
+        <p id="walk-status" class="walk-status" role="status">Market girişi</p>
+        <button id="register-toggle" class="hud-button register-toggle" type="button" aria-controls="register" aria-expanded="false">Kasa</button>
+      </div>
+    </div>
+
+    <section class="register" id="register" aria-labelledby="register-title" hidden>
+      <div class="panel-title">
+        <h2 id="register-title">Müşteri siparişi</h2>
+        <button id="register-close" class="close" type="button" aria-label="Kasayı kapat">×</button>
+      </div>
+      <dl class="shift-total">
+        <div><dt>Satış</dt><dd id="sold">0</dd></div>
+        <div><dt>Kasa toplamı</dt><dd id="revenue">₺0,00</dd></div>
+      </dl>
       <div class="customer" id="customer-banner" hidden>
         <div class="customer-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="7" r="3"/><path d="M5 20v-1a7 7 0 0 1 14 0v1" stroke-linecap="round"/></svg></div>
         <div><strong id="customer-name"></strong><p id="customer-line"></p></div>
@@ -63,22 +74,23 @@
         <button class="primary" id="next" type="button" hidden>Sıradaki müşteri</button>
       </div>
       <p class="message" id="message" role="status" aria-live="polite"></p>
-      <p class="disclaimer">Fiyatlar oyun içindir. Gerçek sipariş, ödeme veya telefon araması yapılmaz.</p>
+      <p class="disclaimer">Ödemeler oyun parasıyla yapılır.</p>
     </section>
-  </main>
 
-  <dialog id="phone" aria-labelledby="phone-title">
-    <div class="phone-title">
-      <h2 id="phone-title">Market telefonu</h2>
-      <button id="phone-close" class="close" type="button" aria-label="Telefonu kapat">×</button>
-    </div>
-    <p id="phone-status" role="status">Market güvenliğinde açık olay yok.</p>
-    <button id="call-police" class="primary" type="button" disabled>Oyun içi polisi ara</button>
-  </dialog>
+    <dialog id="helper" aria-labelledby="helper-title">
+      <div class="panel-title">
+        <h2 id="helper-title">Market rehberi</h2>
+        <button id="helper-close" class="close" type="button" aria-label="Yardımı kapat">×</button>
+      </div>
+      <p>Manav cam kenarında, kasa marketin girişinde. Bilgisayarda <strong>WASD</strong> veya ok tuşlarıyla yürü. Telefonda yön düğmelerini kullan. Etrafa bakmak için görüntüyü sürükle.</p>
+      <button id="helper-cashier" class="primary" type="button">Kasaya dön</button>
+    </dialog>
+  </main>
 
   <script src="three.min.js" defer></script>
   <script src="kurye-araclari.js" defer></script>
   <script src="catalog.js" defer></script>
+  <script src="market-peyzaj.js" defer></script>
   <script src="super-market.js" defer></script>
 </body>
 </html>
