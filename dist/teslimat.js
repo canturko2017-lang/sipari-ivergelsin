@@ -1,6 +1,6 @@
 'use strict';
 (() => {
- const assetTasks=[],airportTasks=[];let assetsStarted=false,airportAssetsStarted=false;function assetTask(file,callback){return ()=>{const script=document.createElement('script');script.src=file;script.onload=callback;script.onerror=()=>console.warn('Dosya açılamadı:',file);document.head.appendChild(script)}}function queueAsset(file,callback){const task=assetTask(file,callback),priority={'van-data.js':0,'gercekci-motor-data.js':0,'rider-data.js':1,'sedan-data.js':2,'bmw-m3-data.js':3,'audi-q7-data.js':4};task.priority=priority[file]??10;assetTasks.push(task)}function queueAirportAsset(file,callback){const task=assetTask(file,callback);task.priority=file==='ucak-data.js'?0:file==='guvenlik-data.js'?1:2;airportTasks.push(task)}function loadAssets(){if(assetsStarted)return;assetsStarted=true;assetTasks.sort((a,b)=>a.priority-b.priority).forEach((task,i)=>setTimeout(task,150+i*1400))}function loadAirportAssets(){if(airportAssetsStarted)return;airportAssetsStarted=true;airportTasks.sort((a,b)=>a.priority-b.priority).forEach((task,i)=>setTimeout(task,i*500))}
+ const assetTasks=[],airportTasks=[];let assetsStarted=false,airportAssetsStarted=false;function assetTask(file,callback){return ()=>{const script=document.createElement('script');script.src=file;script.onload=callback;script.onerror=()=>console.warn('Dosya açılamadı:',file);document.head.appendChild(script)}}function queueAsset(file,callback){const task=assetTask(file,callback),priority={'gercekci-motor-data.js':0,'rider-data.js':1};task.priority=priority[file]??10;assetTasks.push(task)}function queueAirportAsset(file,callback){const task=assetTask(file,callback);task.priority=file==='ucak-data.js'?0:file==='guvenlik-data.js'?1:2;airportTasks.push(task)}function loadAssets(){if(assetsStarted)return;assetsStarted=true;assetTasks.sort((a,b)=>a.priority-b.priority).forEach((task,i)=>setTimeout(task,150+i*1400))}function loadAirportAssets(){if(airportAssetsStarted)return;airportAssetsStarted=true;airportTasks.sort((a,b)=>a.priority-b.priority).forEach((task,i)=>setTimeout(task,i*500))}
  const params=new URLSearchParams(location.search);const names=['Hemen','Sanal Market','Elektronik','Yemek','Macro Online','Mion','Petimo','Taze Direkt'];
  const courierMode = params.get('mod') === 'kurye';
  const chosenVehicle = params.get('arac');
@@ -11,11 +11,14 @@
    ? chosenVehicle : forcedCar || (automatic ? Math.random() < .5 : chosenVehicle === 'araba') ? 'araba' : 'motor';
  const challenge = params.get('gorev-turu') === 'akrobasi';
  const picks={'Hemen':[2,19,27],'Sanal Market':[1,5,21],'Elektronik':[11,39,144],'Yemek':[7,23],'Macro Online':[3,5,6],'Mion':[20,9],'Petimo':[122,123],'Taze Direkt':[1,2,3]};const chosen=(picks[service]||[1,2]).map(id=>typeof products!=='undefined'?products.find(p=>p.id===id):null).filter(Boolean);const orderText=chosen.slice(0,2).map(p=>p.name).join(', ');
- const el=id=>document.getElementById(id), roadLength=3000, maxSpeed=vehicle==='motor'?90:80;
+ const el=id=>document.getElementById(id), roadLength=3000;
+ const maxSpeed = vehicle === 'motor' ? 90 : 145;
+ const cruiseSpeed = vehicle === 'motor' ? 55 : 75;
+ const acceleration = vehicle === 'motor' ? 22 : 36;
  const vehicleModels = courierMode ? window.KuryeAraclari : null;
  const vehicleName = vehicle === 'motor'
    ? (vehicleModels ? 'H2R esintili spor motor' : 'Kurye motoru')
-   : (vehicleModels ? 'Chiron esintili spor araba' : 'Teslimat aracı');
+   : 'BMW M5';
  el('service').textContent=service.toLocaleUpperCase('tr-TR');el('title').textContent='Yeni müşteri siparişi';
  el('description').textContent='Müşteri sipariş verdi. Paketi güvenle adresine ulaştır.';
  el('details').textContent=(orderText?'Sipariş: '+orderText+'  ·  ':'')+'Araç: '+vehicleName+'  ·  Mesafe: 3 km';
@@ -40,18 +43,27 @@
  function helmetMark(parent){const canvas=document.createElement('canvas');canvas.width=256;canvas.height=96;const ctx=canvas.getContext('2d');ctx.fillStyle='#171b20';ctx.fillRect(0,0,256,96);ctx.fillStyle='white';ctx.font='bold 65px Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('LS2',128,49);const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;const mark=new THREE.Mesh(new THREE.PlaneGeometry(.19,.07),new THREE.MeshBasicMaterial({map:texture,side:THREE.DoubleSide}));mark.position.set(0,.01,.254);parent.add(mark)}
  function makeRealisticHelmet(){const group=new THREE.Group(),shell=mat(0x20272c,.26,.28),trim=mat(0x111519,.4,.15),visor=mat(0x263c49,.12,.45);const dome=new THREE.Mesh(new THREE.SphereGeometry(.23,40,28),shell);dome.scale.set(1,1.08,1.06);group.add(dome);const chin=new THREE.Mesh(new THREE.SphereGeometry(.17,32,20),shell);chin.scale.set(1.2,.65,.8);chin.position.set(0,-.105,-.13);group.add(chin);const shield=new THREE.Mesh(new THREE.SphereGeometry(.22,36,20,0,Math.PI*2,0,Math.PI*2),visor);shield.scale.set(.89,.48,.22);shield.position.set(0,.015,-.213);group.add(shield);for(const side of [-1,1]){const pivot=new THREE.Mesh(new THREE.SphereGeometry(.027,16,10),trim);pivot.position.set(side*.213,.005,-.085);group.add(pivot)}const vent=new THREE.Mesh(new THREE.BoxGeometry(.1,.017,.035),trim);vent.position.set(0,.215,-.075);group.add(vent);helmetMark(group);return group}
  function makeDeliveryLabel(parent,x,y,z,width,height,rotation){const canvas=document.createElement('canvas');canvas.width=512;canvas.height=256;const ctx=canvas.getContext('2d');ctx.fillStyle='#ec7621';ctx.fillRect(0,0,512,256);ctx.fillStyle='#ffffff';ctx.textAlign='center';ctx.textBaseline='middle';ctx.font='bold 55px Arial';ctx.fillText('SİPARİŞİ',256,85);ctx.font='bold 55px Arial';ctx.fillText('VER GELSİN',256,160);const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;const plane=new THREE.Mesh(new THREE.PlaneGeometry(width,height),new THREE.MeshBasicMaterial({map:texture,side:THREE.DoubleSide}));plane.position.set(x,y,z);plane.rotation.y=rotation;parent.add(plane)}
+ function createBmw(model,color,police = false) {
+   const detailed = window.BMWAraclari?.create(THREE,{model,color,police});
+   if (detailed) return detailed;
+   const fallback = window.KuryeAraclari?.createCar(model === 'M5' ? 'm5' : 'm4',color) || roadCar(color);
+   if (police) {
+     const sirenRed = new THREE.MeshStandardMaterial({ color: 0x6b121a, emissive: 0xff2143, emissiveIntensity: 0 });
+     const sirenBlue = new THREE.MeshStandardMaterial({ color: 0x144382, emissive: 0x317fff, emissiveIntensity: 0 });
+     cube(fallback,.84,.09,.34,mat(0x233145),0,1.86,0);
+     cube(fallback,.32,.13,.3,sirenRed,-.22,1.94,0);
+     cube(fallback,.32,.13,.3,sirenBlue,.22,1.94,0);
+     Object.assign(fallback.userData,{sirenRed,sirenBlue});
+   }
+   return fallback;
+ }
  let motorTrafficSource=null,riderTrafficSource=null,motorTrafficAdded=false;
- const player = vehicle === 'motor' ? motor() : (vehicleModels?.createCar('chiron', 0x2363a5) || roadCar(0xe87823,true));
+ const player = vehicle === 'motor' ? motor() : createBmw('M5',0x184988);
  if (vehicle === 'motor' && vehicleModels) vehicleModels.upgradeMotor(player);
  scene.add(player);
- if (!vehicleModels && vehicle === 'araba') {
-   makeDeliveryLabel(player,0,1.48,2.77,1.55,.54,0);
-   makeDeliveryLabel(player,1.065,.78,0,2.0,.47,Math.PI/2);
-   makeDeliveryLabel(player,-1.065,.78,0,2.0,.47,-Math.PI/2);
- } else if (vehicle === 'motor' && !vehicleModels) {
+ if (vehicle === 'motor' && !vehicleModels) {
    makeDeliveryLabel(player,0,1.45,1.23,.7,.43,0);
  }
- if(!vehicleModels&&vehicle==='araba')queueAsset('van-data.js',()=>{if(vehicle==='araba'&&window.vanModelBase64&&THREE.GLTFLoader){try{const raw=atob(window.vanModelBase64),bytes=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);new THREE.GLTFLoader().parse(bytes.buffer,'',gltf=>{window.vanModelLoaded=true;const model=gltf.scene;model.rotation.y=Math.PI;model.traverse(part=>{if(part.isMesh&&part.material&&part.material.name==='white'){part.material=part.material.clone();part.material.color.set(0xe97523)}});for(const part of [...player.children])player.remove(part);player.add(model);addPlate(player,2.74);makeDeliveryLabel(player,0,1.5,2.73,1.5,.58,0);makeDeliveryLabel(player,1.045,1.35,0,2.2,.6,Math.PI/2);makeDeliveryLabel(player,-1.045,1.35,0,2.2,.6,-Math.PI/2)},error=>window.vanModelError=String(error))}catch(error){window.vanModelError=String(error)}}});
  if (!vehicleModels) queueAsset('gercekci-motor-data.js',()=>{if(window.realMotorBase64&&THREE.GLTFLoader){try{const raw=atob(window.realMotorBase64),bytes=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);new THREE.GLTFLoader().parse(bytes.buffer,'',gltf=>{window.scooterModelLoaded=true;const model=gltf.scene;model.rotation.y=Math.PI;model.scale.setScalar(1.1);motorTrafficSource=model;addMotorTraffic();if(!vehicleModels&&vehicle==='motor'){for(const part of [...player.children])if(part!==player.userData.rider&&part!==player.userData.helmet)player.remove(part);player.add(model);cube(player,.75,.48,.65,mat(0xde7020,.4,.12),0,1.05,1.05);cube(player,.78,.045,.68,mat(0x3d4243,.45),0,1.31,1.05);cube(player,.78,.035,.68,mat(0x343939,.45),0,.79,1.05);cube(player,.24,.07,.012,mat(0xb82019,.25),0,.9,1.383);makeDeliveryLabel(player,0,1.05,1.38,.7,.4,0);makeDeliveryLabel(player,.381,1.05,1.05,.58,.36,Math.PI/2);makeDeliveryLabel(player,-.381,1.05,1.05,.58,.36,-Math.PI/2)}},error=>{window.scooterModelError=String(error);console.warn('Motor modeli açılamadı:',error)})}catch(error){console.warn('Motor modeli açılamadı:',error)}}});
 
  if (!vehicleModels || vehicle === 'motor') queueAsset('rider-data.js',()=>{if(window.riderModelBase64&&THREE.GLTFLoader){try{const raw=atob(window.riderModelBase64),bytes=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);new THREE.GLTFLoader().parse(bytes.buffer,'',gltf=>{window.riderModelLoaded=true;const rider=gltf.scene;riderTrafficSource=rider;addMotorTraffic();if(vehicle==='motor'){rider.position.set(0,.38,.07);rider.rotation.y=Math.PI;player.remove(player.userData.rider);player.userData.rider=rider;player.add(rider);const helmet=makeRealisticHelmet();helmet.position.set(0,1.7,.08);player.userData.helmet=helmet;player.add(helmet)}},error=>{window.riderModelError=String(error)})}catch(error){window.riderModelError=String(error)}}});
@@ -106,12 +118,12 @@
  let flyingPlane=null;
  queueAirportAsset('terminal-data.js',()=>{if(!window.terminalModelBase64||!THREE.GLTFLoader)return;try{const raw=atob(window.terminalModelBase64),bytes=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);new THREE.GLTFLoader().parse(bytes.buffer,'',gltf=>{airport.remove(airportFallback);gltf.scene.scale.setScalar(.32);gltf.scene.rotation.y=Math.PI/2;airport.add(gltf.scene);window.airportModelLoaded=true},error=>window.airportModelError=String(error))}catch(error){window.airportModelError=String(error)}});
  queueAirportAsset('ucak-data.js',()=>{if(!window.ucakModelBase64||!THREE.GLTFLoader)return;try{const raw=atob(window.ucakModelBase64),bytes=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);new THREE.GLTFLoader().parse(bytes.buffer,'',gltf=>{const plane=gltf.scene;plane.scale.setScalar(.6);plane.position.set(29,1,6);airport.add(plane);const second=plane.clone(true);second.position.set(-31,1,0);second.rotation.y=Math.PI;airport.add(second);flyingPlane=plane.clone(true);flyingPlane.scale.setScalar(.7);flyingPlane.position.set(0,26,70);flyingPlane.rotation.y=Math.PI/2;airport.add(flyingPlane);window.planeModelLoaded=true},error=>window.planeModelError=String(error))}catch(error){window.planeModelError=String(error)}});
- const checkpointZ=-1250,checkpoint=new THREE.Group();checkpoint.position.set(roadCenter(checkpointZ)+10,0,checkpointZ);checkpoint.rotation.y=roadHeading(checkpointZ);scene.add(checkpoint);const policeCar=roadCar(0xe9eceb,false);checkpoint.add(policeCar);cube(policeCar,.9,.2,.32,mat(0x264a9a),0,1.95,0);cube(policeCar,.42,.17,.34,mat(0xbc2837),-.22,2.14,0);cube(policeCar,.42,.17,.34,mat(0x2960b2),.22,2.14,0);const policeSign=new THREE.Group();policeSign.position.set(-3,0,5);checkpoint.add(policeSign);cube(policeSign,.12,3,.12,silver,0,1.5,0);streetSign(policeSign,'POLİS');
+ const checkpointZ=-1250,checkpoint=new THREE.Group();checkpoint.position.set(roadCenter(checkpointZ)+10,0,checkpointZ);checkpoint.rotation.y=roadHeading(checkpointZ);scene.add(checkpoint);checkpoint.add(createBmw('M5',0xe9eceb,true));const policeSign=new THREE.Group();policeSign.position.set(-3,0,5);checkpoint.add(policeSign);cube(policeSign,.12,3,.12,silver,0,1.5,0);streetSign(policeSign,'POLİS');
  const officerHolder=new THREE.Group();officerHolder.position.set(-3,0,1);checkpoint.add(officerHolder);cube(officerHolder,.55,1.1,.32,mat(0x293e58),0,1.2,0);const officerHead=new THREE.Mesh(new THREE.SphereGeometry(.22,12,10),skin);officerHead.position.set(0,1.95,0);officerHolder.add(officerHead);
  queueAsset('polis-data.js',()=>{if(!window.polisModelBase64||!THREE.GLTFLoader)return;try{const raw=atob(window.polisModelBase64),bytes=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);new THREE.GLTFLoader().parse(bytes.buffer,'',gltf=>{for(const part of [...officerHolder.children])officerHolder.remove(part);gltf.scene.rotation.y=Math.PI;officerHolder.add(gltf.scene);window.policeModelLoaded=true},error=>window.policeModelError=String(error))}catch(error){window.policeModelError=String(error)}});
- const carBadgeTextures={};function addCarBadge(group,brand){let texture=carBadgeTextures[brand];if(!texture){const c=document.createElement('canvas');c.width=256;c.height=96;const ctx=c.getContext('2d');ctx.clearRect(0,0,256,96);ctx.font='bold 52px Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.lineWidth=7;ctx.strokeStyle='#111';ctx.strokeText(brand,128,48);ctx.fillStyle='#f4f4f4';ctx.fillText(brand,128,48);texture=new THREE.CanvasTexture(c);texture.colorSpace=THREE.SRGBColorSpace;carBadgeTextures[brand]=texture}const badge=new THREE.Mesh(new THREE.PlaneGeometry(.44,.165),new THREE.MeshBasicMaterial({map:texture,transparent:true,side:THREE.DoubleSide,depthWrite:false}));badge.position.set(0,1.12,2.42);group.add(badge)}
  const traffic = [];
- const trafficColors = [0xc4c9c7,0x566b7a,0x8c3029,0xb9b0a2,0x343d42];
+ const trafficColors = [0xe7e6dd,0x234569,0x8c3029,0xa1a9ae,0x20292f,0x356456,0x9d6c3f];
+ const trafficModels = ['M3','M4','M5'];
  function placeTrafficVehicle(mesh, { startZ, lane, speed, direction = 1, ...kind }) {
    mesh.position.set(roadCenter(startZ) + lane, 0, startZ);
    mesh.rotation.y = roadHeading(startZ) + (direction < 0 ? Math.PI : 0);
@@ -123,31 +135,21 @@
  for (let index = 0; index < 26; index++) {
    const color = trafficColors[index % trafficColors.length];
    const lane = [-6,-2,2,6][index % 4];
-   const mesh = vehicleModels?.createCar(index % 2 ? 'm5' : 'm4', color) || roadCar(color, index % 9 === 0);
+   const mesh = createBmw(trafficModels[index % trafficModels.length],color);
    placeTrafficVehicle(mesh, {
      startZ: -75 - index * 110, lane, speed: 5 + (index % 4) * 1.2,
      direction: courierMode && lane < 0 ? -1 : 1,
-     isSUV: index % 4 === 1, brand: index % 8 === 1 ? 'audi' : index % 8 === 2 ? 'bmw' : null,
    });
  }
- const patrolMesh = roadCar(0xdfe8ef);
- const sirenRed = new THREE.MeshStandardMaterial({ color: 0x6b121a, emissive: 0xff2143, emissiveIntensity: 0 });
- const sirenBlue = new THREE.MeshStandardMaterial({ color: 0x144382, emissive: 0x317fff, emissiveIntensity: 0 });
- cube(patrolMesh,.95,.09,.34,mat(0x233145),0,1.94,0);
- cube(patrolMesh,.36,.13,.3,sirenRed,-.24,2.02,0);
- cube(patrolMesh,.36,.13,.3,sirenBlue,.24,2.02,0);
+ const patrolMesh = createBmw('M5',0xdfe8ef,true);
+ const {sirenRed,sirenBlue} = patrolMesh.userData;
  const patrol = placeTrafficVehicle(patrolMesh, { startZ: -205, lane: 2, speed: 7.2, isPolice: true });
  function addMotorTraffic(){if(!motorTrafficSource||!riderTrafficSource||motorTrafficAdded)return;motorTrafficAdded=true;for(let i=0;i<5;i++){const g=new THREE.Group(),model=motorTrafficSource.clone(true),rider=riderTrafficSource.clone(true);rider.position.set(0,.38,.07);rider.rotation.y=Math.PI;g.add(model,rider);const helmet=makeRealisticHelmet();helmet.position.set(0,1.7,.08);g.add(helmet);const lane=[-6,-2,2,6,2][i],z=-120-i*350;placeTrafficVehicle(g, {startZ:z,lane,speed:6+i,direction:courierMode&&lane<0?-1:1,isMotor:true})}window.motorTrafficLoaded=true}
- if(!vehicleModels)queueAsset('sedan-data.js',()=>{if(!window.sedanModelBase64||!THREE.GLTFLoader)return;try{const raw=atob(window.sedanModelBase64),bytes=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);new THREE.GLTFLoader().parse(bytes.buffer,'',gltf=>{const parts={};gltf.scene.updateMatrixWorld(true);gltf.scene.traverse(o=>{if(!o.isMesh||!o.geometry.attributes.position)return;const geo=o.geometry.index?o.geometry.toNonIndexed():o.geometry.clone();geo.applyMatrix4(o.matrixWorld);const key=o.material.name||'body',entry=parts[key]||(parts[key]={material:o.material,positions:[],normals:[],uvs:[]});entry.positions.push(geo.attributes.position.array);if(geo.attributes.normal)entry.normals.push(geo.attributes.normal.array);entry.uvs.push(geo.attributes.uv?geo.attributes.uv.array:new Float32Array(geo.attributes.position.count*2))});const join=arrays=>{const out=new Float32Array(arrays.reduce((n,a)=>n+a.length,0));let i=0;for(const a of arrays){out.set(a,i);i+=a.length}return out};const meshes=Object.entries(parts).map(([name,part])=>{const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.BufferAttribute(join(part.positions),3));geometry.setAttribute('uv',new THREE.BufferAttribute(join(part.uvs),2));if(part.normals.length===part.positions.length)geometry.setAttribute('normal',new THREE.BufferAttribute(join(part.normals),3));else geometry.computeVertexNormals();geometry.computeBoundingSphere();return {name,geometry,material:part.material}});const colors=[0xc4c9c7,0x566b7a,0x8c3029,0xb9b0a2,0x343d42];traffic.forEach((car,index)=>{if(car.isMotor||car.isSUV||car.brand)return;const model=new THREE.Group();model.rotation.y=Math.PI;meshes.forEach(part=>{let material=part.material;if(part.name==='white'){material=material.clone();material.color.set(colors[index%colors.length])}model.add(new THREE.Mesh(part.geometry,material))});for(const child of [...car.mesh.children])car.mesh.remove(child);car.mesh.add(model);addPlate(car.mesh,2.4)});const policeModel=new THREE.Group();policeModel.rotation.y=Math.PI;meshes.forEach(part=>policeModel.add(new THREE.Mesh(part.geometry,part.material)));for(const child of [...policeCar.children])policeCar.remove(child);policeCar.add(policeModel);addPlate(policeCar,2.4);cube(policeCar,.9,.15,.32,mat(0x244d98),0,1.57,0);cube(policeCar,.42,.14,.34,mat(0xbc2837),-.22,1.71,0);cube(policeCar,.42,.14,.34,mat(0x2960b2),.22,1.71,0);const policeLabel=new THREE.Group();policeLabel.position.set(0,-2,2.42);policeLabel.scale.set(.55,.55,.55);streetSign(policeLabel,'POLİS');policeCar.add(policeLabel);window.trafficModelLoaded=true},error=>window.trafficModelError=String(error))}catch(error){window.trafficModelError=String(error)}});
- if(!vehicleModels)queueAsset('suv-data.js',()=>{if(!window.suvBase64)return;loadBuilding(window.suvBase64,parts=>{traffic.forEach((car,index)=>{if(!car.isSUV||car.brand)return;const model=new THREE.Group();model.rotation.y=-Math.PI/2;for(const part of parts)model.add(new THREE.Mesh(part.geometry,part.material));for(const child of [...car.mesh.children])car.mesh.remove(child);car.mesh.add(model);addPlate(car.mesh,2.28)});window.suvModelLoaded=true},'suvModelError')});
- function addBrandedCars(brand,parts){traffic.forEach(car=>{if(car.brand!==brand)return;const model=new THREE.Group();for(const part of parts)model.add(new THREE.Mesh(part.geometry,part.material));if(brand==='bmw'){model.rotation.y=Math.PI}else{model.scale.setScalar(.731);model.position.set(-.899*.731,0,-2.302*.731)}for(const child of [...car.mesh.children])car.mesh.remove(child);car.mesh.add(model)});window[brand+'ModelLoaded']=true}
- if(!vehicleModels)queueAsset('bmw-m3-data.js',()=>loadBuilding(window.bmwBase64,parts=>addBrandedCars('bmw',parts),'bmwModelError'));
- if(!vehicleModels)queueAsset('audi-q7-data.js',()=>loadBuilding(window.audiBase64,parts=>addBrandedCars('audi',parts),'audiModelError'));
  let cameraMode=0;const cameraNames=['Dış','Sürücü','Kask'];function setCamera(){el('cockpit').classList.toggle('car-interior',vehicle==='araba');const label=vehicle==='araba'&&cameraMode===2?'İç':cameraNames[cameraMode];el('cameraButton').textContent='Kamera: '+label;el('helmetFrame').hidden=!(cameraMode===2&&vehicle==='motor');player.visible=cameraMode===0;el('cockpit').hidden=cameraMode===0;el('carCockpit').style.display=vehicle==='araba'?'block':'none';el('motorCockpit').style.display=vehicle==='motor'?'block':'none'}function changeCamera(){cameraMode=(cameraMode+1)%3;setCamera()}el('cameraButton').addEventListener('click',changeCamera);setCamera();
  const contactTexture=(()=>{const c=document.createElement('canvas');c.width=c.height=128;const x=c.getContext('2d'),g=x.createRadialGradient(64,64,2,64,64,62);g.addColorStop(0,'rgba(0,0,0,.52)');g.addColorStop(1,'rgba(0,0,0,0)');x.fillStyle=g;x.fillRect(0,0,128,128);return new THREE.CanvasTexture(c)})();const playerShadow=new THREE.Mesh(new THREE.PlaneGeometry(3,6),new THREE.MeshBasicMaterial({map:contactTexture,transparent:true,depthWrite:false}));playerShadow.rotation.x=-Math.PI/2;playerShadow.position.y=.035;scene.add(playerShadow);
  const exhaustFlames=new THREE.Group(),flamePieces=[];exhaustFlames.visible=false;scene.add(exhaustFlames);const flameOuter=new THREE.MeshBasicMaterial({color:0xff5b08,transparent:true,opacity:.86,depthWrite:false,blending:THREE.AdditiveBlending}),flameInner=new THREE.MeshBasicMaterial({color:0xffdf62,transparent:true,opacity:.95,depthWrite:false,blending:THREE.AdditiveBlending});for(const x of (vehicle==='araba'?[-.55,.55]:[0])){const nozzle=new THREE.Group();nozzle.position.set(x,.55,vehicle==='araba'?2.75:1.2);const outer=new THREE.Mesh(new THREE.ConeGeometry(.27,1.35,12),flameOuter);outer.rotation.x=Math.PI/2;outer.position.z=.65;nozzle.add(outer);const inner=new THREE.Mesh(new THREE.ConeGeometry(.14,.78,10),flameInner);inner.rotation.x=Math.PI/2;inner.position.z=.38;nozzle.add(inner);flamePieces.push(nozzle);exhaustFlames.add(nozzle)}
  let jumpHeight = 0, jumpVelocity = 0, airRotation = 0, wheelie = 0;
- let distance = 0, speed = 0, lateral = 0, last = 0, targetSpeed = 55, speedAdjusted = false;
+ let distance = 0, speed = 0, lateral = 0, last = 0, targetSpeed = cruiseSpeed, speedAdjusted = false;
  let phase = 'ready', phoneOpen = false, policeChecked = false, securityChecked = false, airportAnnounced = false;
  let pursuitTime = 0, recoveryTime = 0, jumpCount = 0;
  const clearedCars = new Set();
@@ -198,13 +200,13 @@
    pursuitTime = recoveryTime = jumpCount = 0;
    clearedCars.clear();
    speed = 35;
-   targetSpeed = 55;
+   targetSpeed = cruiseSpeed;
    lateral = 2;
    speedAdjusted = phoneOpen = policeChecked = securityChecked = airportAnnounced = false;
    for (const id of ['securityPanel','airportNotice','policePanel','phonePanel']) el(id).hidden = true;
    if (deliveryAction) deliveryAction.hidden = true;
    setPhase('ready');
-   el('speedTarget').textContent = '55';
+   el('speedTarget').textContent = String(cruiseSpeed);
    for (const trafficVehicle of traffic) {
      const { mesh, startZ, lane, direction } = trafficVehicle;
      mesh.position.set(roadCenter(startZ) + lane, 0, startZ);
@@ -652,12 +654,12 @@
    const left = keys.arrowleft || keys.a || controls.left, right = keys.arrowright || keys.d || controls.right;
    const gas = keys.arrowup || keys.w || controls.accelerate, brake = keys.arrowdown || keys.s || controls.brake;
    if (brake || gas) {
-     speed = THREE.MathUtils.clamp(speed+(brake?-45:22)*dt,0,maxSpeed);
+     speed = THREE.MathUtils.clamp(speed+(brake?-45:acceleration)*dt,0,maxSpeed);
      targetSpeed = speed;
      speedAdjusted = false;
      el('speedTarget').textContent = Math.round(targetSpeed);
    } else {
-     const change = THREE.MathUtils.clamp(targetSpeed-speed,-14*dt,10*dt);
+     const change = THREE.MathUtils.clamp(targetSpeed-speed,-14*dt,(vehicle==='motor'?10:18)*dt);
      speed = THREE.MathUtils.clamp(speed+change,0,maxSpeed);
    }
    if (keys.shift || controls.boost) speed = vehicle==='araba' ? 3000 : maxSpeed;
