@@ -1,6 +1,6 @@
 'use strict';
 
-const CACHE = 'tarif-market-v60';
+const CACHE = 'tarif-market-v61';
 const SHELL = [
   './', './index.html', './app.css', './app.js', './catalog.js',
   './oyun-modlari.html', './oyun-modlari.css', './oyun-modlari.js',
